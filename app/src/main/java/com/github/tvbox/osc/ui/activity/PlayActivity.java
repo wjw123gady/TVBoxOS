@@ -178,7 +178,7 @@ public class PlayActivity extends BaseActivity {
             @Override
             public void playNext(boolean rmProgress) {
                 String preProgressKey = progressKey;
-                PlayActivity.this.playNext(rmProgress);
+                PlayActivity.this.playNext();
                 if (rmProgress && preProgressKey != null)
                     CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
             }
@@ -749,22 +749,28 @@ public class PlayActivity extends BaseActivity {
     private String sourceKey;
     private SourceBean sourceBean;
 
-    private void playNext(boolean isProgress) {
+    private void playNext() {
         boolean hasNext = true;
         if (mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null) {
             hasNext = false;
         } else {
-            hasNext = mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
+//修正倒序排序时上一集与下一集播放顺序相反的问题
+//            hasNext = mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
+            if (mVodInfo.reverseSort){
+                hasNext = mVodInfo.playIndex - 1 >= 0;
+            } else {
+                hasNext = mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
+            }
         }
         if (!hasNext) {
-            if(isProgress && mVodInfo!=null){
-                mVodInfo.playIndex=0;
-                Toast.makeText(this, "已经是最后一集了!,即将跳到第一集继续播放", Toast.LENGTH_SHORT).show();
-            }else {
                 Toast.makeText(this, "已经是最后一集了!", Toast.LENGTH_SHORT).show();
                 return;
-            }
-        }else {
+        }
+//修正倒序排序时上一集与下一集播放顺序相反的问题
+//        mVodInfo.playIndex++;
+        if (mVodInfo.reverseSort){
+            mVodInfo.playIndex--;
+        } else {
             mVodInfo.playIndex++;
         }
         play(false);
@@ -775,13 +781,25 @@ public class PlayActivity extends BaseActivity {
         if (mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null) {
             hasPre = false;
         } else {
-            hasPre = mVodInfo.playIndex - 1 >= 0;
+//修正倒序排序时上一集与下一集播放顺序相反的问题
+//            hasPre = mVodInfo.playIndex - 1 >= 0;
+            if (mVodInfo.reverseSort){
+                hasPre = mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
+            } else {
+                hasPre = mVodInfo.playIndex - 1 >= 0;
+            }
         }
         if (!hasPre) {
             Toast.makeText(this, "已经是第一集了!", Toast.LENGTH_SHORT).show();
             return;
         }
-        mVodInfo.playIndex--;
+//修正倒序排序时上一集与下一集播放顺序相反的问题
+//        mVodInfo.playIndex--;
+        if (mVodInfo.reverseSort){
+            mVodInfo.playIndex++;
+        } else {
+            mVodInfo.playIndex--;
+        }
         play(false);
     }
 
