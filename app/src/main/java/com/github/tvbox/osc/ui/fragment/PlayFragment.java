@@ -178,7 +178,7 @@ public class PlayFragment extends BaseLazyFragment {
             @Override
             public void playNext(boolean rmProgress) {
                 String preProgressKey = progressKey;
-                PlayFragment.this.playNext(rmProgress);
+                PlayFragment.this.playNext();
                 if (rmProgress && preProgressKey != null)
                     CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
             }
@@ -766,7 +766,7 @@ public class PlayFragment extends BaseLazyFragment {
     private String sourceKey;
     private SourceBean sourceBean;
 
-    private void playNext(boolean isProgress) {
+    private void playNext() {
         boolean hasNext;
         if (mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null) {
             hasNext = false;
@@ -776,9 +776,8 @@ public class PlayFragment extends BaseLazyFragment {
         if (!hasNext) {
             Toast.makeText(requireContext(), "已经是最后一集了!", Toast.LENGTH_SHORT).show();
             return;
-        }else {
-            mVodInfo.playIndex++;
         }
+        mVodInfo.playIndex++;
         play(false);
     }
 
