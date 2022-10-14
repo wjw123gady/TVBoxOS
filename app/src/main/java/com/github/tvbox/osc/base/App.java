@@ -52,10 +52,8 @@ public class App extends MultiDexApplication {
         JSEngine.getInstance().create();
     }
 
-
-       
-         // Add Pyramid support
-         PythonLoader.getInstance().setApplication(this);
+        // Add Pyramid support
+        PythonLoader.getInstance().setApplication(this);
     }
 
     private void initParams() {
