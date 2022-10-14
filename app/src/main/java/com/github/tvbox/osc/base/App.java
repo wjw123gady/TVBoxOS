@@ -54,9 +54,6 @@ public class App extends MultiDexApplication {
         PythonLoader.getInstance().setApplication(this);
     }
 
-        JSEngine.getInstance().create();
-    }
-
     private void initParams() {
         // Hawk
         Hawk.init(this).build();
