@@ -59,6 +59,7 @@ public class App extends MultiDexApplication {
         PlayerHelper.init();
         // Add Pyramid support
         PythonLoader.getInstance().setApplication(this);
+
         QuickJSLoader.init();
         FileUtils.cleanPlayerCache();
     }
